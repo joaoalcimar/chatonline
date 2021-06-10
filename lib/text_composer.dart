@@ -16,8 +16,7 @@ class _TextComposerState extends State<TextComposer> {
   bool _isComposing = false;
   final TextEditingController _controller = TextEditingController();
 
-
-  void _reset(){
+  void _reset() {
     _controller.clear();
     setState(() {
       _isComposing = false;
@@ -30,14 +29,16 @@ class _TextComposerState extends State<TextComposer> {
       margin: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Row(
         children: <Widget>[
-          IconButton(onPressed: () async{
-            final File imgFile = await ImagePicker.pickImage(source: ImageSource.camera);
-            if (imgFile == null) {
-              return;
-            }
-            widget.sendMessage(imgFile: imgFile);
-
-          }, icon: Icon(Icons.photo_camera)),
+          IconButton(
+              onPressed: () async {
+                final File imgFile =
+                    await ImagePicker.pickImage(source: ImageSource.camera);
+                if (imgFile == null) {
+                  return;
+                }
+                widget.sendMessage(imgFile: imgFile);
+              },
+              icon: Icon(Icons.photo_camera)),
           Expanded(
             child: TextField(
               controller: _controller,

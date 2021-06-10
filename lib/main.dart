@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'chat_screen.dart';
 
 void main() {
-
   runApp(MyApp());
-
 }
 
 class MyApp extends StatelessWidget {
@@ -16,9 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        iconTheme: IconThemeData(
-          color: Colors.blue
-        ),
+        iconTheme: IconThemeData(color: Colors.blue),
       ),
       home: ChatScreen(),
     );
