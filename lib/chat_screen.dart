@@ -7,6 +7,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import 'chat_message.dart';
+
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
 
@@ -108,8 +110,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     snapshot.data!.documents.reversed.toList();
                 return ListView.builder(
                     itemBuilder: (context, index) {
-                      return ListTile(
-                          title: Text(documents[index].data['text']));
+                      return ChatMessage(documents[index].data, true);
                     },
                     itemCount: documents.length,
                     reverse: true);
