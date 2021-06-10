@@ -68,7 +68,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (imgFile != null) {
       StorageUploadTask task = FirebaseStorage.instance
           .ref()
-          .child(DateTime.now().millisecondsSinceEpoch.toString())
+          .child(user.uid + DateTime.now().millisecondsSinceEpoch.toString())
           .putFile(imgFile);
 
       setState(() {
@@ -119,7 +119,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     googleSignIn.signOut();
                     SnackBar(
                         content: Text("Deslogado com sucesso"),
-                        backgroundColor: Colors.red);
+                    );
                   },
                   icon: Icon(Icons.exit_to_app))
               : Container()
