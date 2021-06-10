@@ -1,4 +1,4 @@
-package com.example.chatonline;
+package alcimar.com.br.chatonline;
 
 import io.flutter.embedding.android.FlutterActivity;
 

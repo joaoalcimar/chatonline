@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "659206297125",
+    "project_id": "chatonline-15dd9",
+    "storage_bucket": "chatonline-15dd9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:659206297125:android:cb1c3a0d849a12289311cc",
+        "android_client_info": {
+          "package_name": "alcimar.com.br.chatonline"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "659206297125-rp9ts11v1hmknn09cvs2ddt2jufkb8og.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "alcimar.com.br.chatonline",
+            "certificate_hash": "b3d7e39113569ba05f664fd96c9dbc4333b09ea9"
+          }
+        },
+        {
+          "client_id": "659206297125-gvkr8on7vijp4e52jv5pkqodqqrdvcu9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3slbjO5f6DAaIwZQdVjkTyMxcF6As6Xc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "659206297125-gvkr8on7vijp4e52jv5pkqodqqrdvcu9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
