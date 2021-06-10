@@ -4,6 +4,7 @@ import 'package:chatonline/text_composer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -19,6 +20,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final GoogleSignIn googleSignIn = GoogleSignIn();
   FirebaseUser? _currentUser;
+  bool _isLoading = false;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -50,15 +52,17 @@ class _ChatScreenState extends State<ChatScreen> {
   void _sendMessage({String? text, File? imgFile}) async {
     final FirebaseUser? user = await _getUser();
     Map<String, dynamic> data = {
-      "uid" : user!.uid,
-      "senderName" : user!.displayName,
-      "senderPhotoUrl" : user.photoUrl
+      "uid": user!.uid,
+      "senderName": user!.displayName,
+      "senderPhotoUrl": user.photoUrl,
+      "time": Timestamp.now()
     };
 
     if (user == null) {
       _scaffoldKey.currentState!.showSnackBar(SnackBar(
-          content: Text("Não foi possível fazer o login, tente novamente"),
-      backgroundColor: Colors.red,));
+        content: Text("Não foi possível fazer o login, tente novamente"),
+        backgroundColor: Colors.red,
+      ));
     }
 
     if (imgFile != null) {
@@ -67,9 +71,16 @@ class _ChatScreenState extends State<ChatScreen> {
           .child(DateTime.now().millisecondsSinceEpoch.toString())
           .putFile(imgFile);
 
+      setState(() {
+        _isLoading = true;
+      });
       StorageTaskSnapshot taskSnapshot = await task.onComplete;
       String url = await taskSnapshot.ref.getDownloadURL();
       data['imgUrl'] = url;
+
+      setState(() {
+        _isLoading = false;
+      });
     }
 
     if (text != null) data['text'] = text;
@@ -82,7 +93,9 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
 
     FirebaseAuth.instance.onAuthStateChanged.listen((user) {
-      _currentUser = user;
+      setState(() {
+        _currentUser = user;
+      });
     });
   }
 
@@ -91,13 +104,34 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("Olá"),
+        title: Text(
+          _currentUser != null
+              ? 'Olá, ${_currentUser!.displayName}'
+              : 'Chat App',
+        ),
+        centerTitle: true,
         elevation: 0,
+        actions: <Widget>[
+          _currentUser != null
+              ? IconButton(
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                    googleSignIn.signOut();
+                    SnackBar(
+                        content: Text("Deslogado com sucesso"),
+                        backgroundColor: Colors.red);
+                  },
+                  icon: Icon(Icons.exit_to_app))
+              : Container()
+        ],
       ),
       body: Column(children: <Widget>[
         Expanded(
             child: StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance.collection('messages').snapshots(),
+          stream: Firestore.instance
+              .collection('messages')
+              .orderBy('time')
+              .snapshots(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.none:
@@ -110,13 +144,16 @@ class _ChatScreenState extends State<ChatScreen> {
                     snapshot.data!.documents.reversed.toList();
                 return ListView.builder(
                     itemBuilder: (context, index) {
-                      return ChatMessage(documents[index].data, true);
+                      return ChatMessage(documents[index].data, documents[index].data['uid'] == _currentUser?.uid
+                      );
                     },
                     itemCount: documents.length,
                     reverse: true);
             }
           },
-        )),
+        )
+        ),
+        _isLoading ? LinearProgressIndicator() : Container(),
         TextComposer(_sendMessage)
       ]),
     );
